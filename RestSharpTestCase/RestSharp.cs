@@ -77,33 +77,29 @@ namespace RestSharpTestCase
         /// <summary>
         /// Update the 
         /// </summary>
-        [TestMethod]
-        public void UpdatePerson()
-        {
-            //arrange
-            RestRequest request = new RestRequest("/AddressBook/update/2", Method.Put);
-            JObject jobjectBody = new JObject();
-            jobjectBody.Add("Firstperson", "Raja");
-            jobjectBody.Add("LastName", "shdd");
-            jobjectBody.Add("Email", "Pavankumar@gmail.com");
-            jobjectBody.Add("PhNum", "938474837");
-            jobjectBody.Add("Address", "KHM");
-            request.AddHeader("Accept", "application/json");
-            request.AddParameter("application/json",jobjectBody,ParameterType.RequestBody);
-           // request.AddHeader("Content-Type", "application/json");
-            request.AddJsonBody(jobjectBody);
-            //act
-            RestResponse response = client.ExecuteAsync(request).Result;
-            //assert
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
-            Person person = JsonConvert.DeserializeObject<Person>(response.Content);
-            //Assert.AreEqual(1,person.Id);
-            Assert.AreEqual("Raja", person.Firstperson);
-            Assert.AreEqual("shdd", person.LastName);
-            Assert.AreEqual("Pavankumar@gmail.com", person.Email);
-            Assert.AreEqual("938474837", person.PhNum);
-            Assert.AreEqual("KHM", person.Address);
-            Console.WriteLine(response.Content);
-        }
+            [TestMethod]
+            public void UpdatePerson()
+            {
+                // arrange
+                RestRequest request = new RestRequest("/AddressBook/update/1", Method.Put);
+                request.AddHeader("Content-type", "application/json");
+                request.AddJsonBody(
+                new
+                {
+
+                    FirstPerson = "Raja",
+                    lastName = "Kongara",
+                    Email = "Kongara@gmail.com",
+                    PhNum = "923874744",
+                    Address = "KHM"
+                });
+                // act
+                RestResponse response = client.ExecuteAsync(request).Result;
+                // assert
+                Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+                Person dataResponse = JsonConvert.DeserializeObject<Person>(response.Content);
+                Assert.AreEqual("923874744", dataResponse.PhNum);
+                Assert.AreEqual("KHM", dataResponse.Address);
+            }
     }
 }
