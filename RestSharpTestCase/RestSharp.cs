@@ -11,7 +11,6 @@ namespace RestSharpTestCase
 {
     public class Person
     {
-        public int Id { get; set; }
         public string Firstperson { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -35,7 +34,7 @@ namespace RestSharpTestCase
             Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
             List<Person> dataResponse = JsonConvert.DeserializeObject<List<Person>>(response.Content);
             Assert.AreEqual(4, dataResponse.Count);
-        } 
+        }
         private RestResponse getEmployeeList()
         {
             //arrange
@@ -44,33 +43,77 @@ namespace RestSharpTestCase
             RestResponse response = client.ExecuteAsync(request).Result;
             return response;
         }
+        /// <summary>
+        /// Adding the people
+        /// </summary>
         [TestMethod]
-        public void AddEmployee()
+        public void AddPerson()
         {
-            //arrange
+            // arrange
             RestRequest request = new RestRequest("/AddressBook/create", Method.Post);
-            JObject jobjectBody=new JObject();
-            jobjectBody.Add("Firstperson", "Pavan");
-            jobjectBody.Add("LastName", "ijfjfhf");
-            jobjectBody.Add("Email", "Pavan@gmail.com");
-            jobjectBody.Add("PhNum", "938474837");
-            jobjectBody.Add("Address", "KHM");
-            jobjectBody.Add("Id", 5);
-            //request.AddParameter("application/json",jobjectBody,ParameterType.RequestBody);
-            request.AddHeader("Content-Type","application/json");
-            request.AddJsonBody(jobjectBody);
-            //act
+            request.AddHeader("Content-type", "application/json");
+            request.AddJsonBody(
+            new
+            {
+
+                FirstPerson = "pavan",
+                lastName = "guggill",
+                Email = "pavan@gmail.com",
+                PhNum = "8347764435",
+                Address = "KHM"
+            });
+            // act
             RestResponse response = client.ExecuteAsync(request).Result;
-            //assert
+            // assert
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
-            Person person = JsonConvert.DeserializeObject<Person>(response.Content);
-            //Assert.AreEqual(5,person.Id);
-            Assert.AreEqual("Pavan",person.Firstperson);
-            Assert.AreEqual("ijfjfhf",person.LastName);
-            Assert.AreEqual("Pavan@gmail.com",person.Email);
-            Assert.AreEqual("938474837",person.PhNum);
-            Assert.AreEqual("KHM",person.Address);
-            Console.WriteLine(response.Content);
+            Person dataResponse = JsonConvert.DeserializeObject<Person>(response.Content);
+            Assert.AreEqual("Kylie", dataResponse.Firstperson);
+            Assert.AreEqual("McMiller", dataResponse.LastName);
+            Assert.AreEqual("kylie@gmail.com", dataResponse.Email);
+            Assert.AreEqual("7548965265", dataResponse.PhNum);
+            Assert.AreEqual("Sidewalk 3/41", dataResponse.Address);
+        }
+        /// <summary>
+        /// Update the 
+        /// </summary>
+        [TestMethod]
+        public void UpdatePerson()
+        {
+            // arrange
+            RestRequest request = new RestRequest("/AddressBook/update/1", Method.Put);
+            request.AddHeader("Content-type", "application/json");
+            request.AddJsonBody(
+            new
+            {
+
+                FirstPerson = "Raja",
+                lastName = "Kongara",
+                Email = "Kongara@gmail.com",
+                PhNum = "923874744",
+                Address = "KHM"
+            });
+            // act
+            RestResponse response = client.ExecuteAsync(request).Result;
+            // assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+            Person dataResponse = JsonConvert.DeserializeObject<Person>(response.Content);
+            Assert.AreEqual("923874744", dataResponse.PhNum);
+            Assert.AreEqual("KHM", dataResponse.Address);
+        }
+        /// <summary>
+        /// Deleting the record
+        /// </summary>
+        [TestMethod]
+        public void GivenEmployee_OnDelete_ShouldReturnSuccess()
+        {
+            // arrange
+            RestRequest request = new RestRequest("/AddressBook/delete/2", Method.Delete);
+
+            // act
+            RestResponse response = client.ExecuteAsync(request).Result;
+
+            // assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.OK);
         }
     }
 }
