@@ -44,8 +44,11 @@ namespace RestSharpTestCase
             RestResponse response = client.ExecuteAsync(request).Result;
             return response;
         }
+        /// <summary>
+        /// Adding the people
+        /// </summary>
         [TestMethod]
-        public void AddEmployee()
+        public void AddPerson()
         {
             //arrange
             RestRequest request = new RestRequest("/AddressBook/create", Method.Post);
@@ -55,21 +58,51 @@ namespace RestSharpTestCase
             jobjectBody.Add("Email", "Pavan@gmail.com");
             jobjectBody.Add("PhNum", "938474837");
             jobjectBody.Add("Address", "KHM");
-            jobjectBody.Add("Id", 5);
-            //request.AddParameter("application/json",jobjectBody,ParameterType.RequestBody);
-            request.AddHeader("Content-Type","application/json");
+            request.AddHeader("Accept", "application/json");
+            request.AddParameter("application/json",jobjectBody,ParameterType.RequestBody);
+            //request.AddHeader("Content-Type","application/json");
+            //request.AddJsonBody(jobjectBody);
+            //act
+            RestResponse response = client.ExecuteAsync(request).Result;
+            //assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
+            Person person = JsonConvert.DeserializeObject<Person>(response.Content);
+            Assert.AreEqual("Raja", person.Firstperson);
+            Assert.AreEqual("shdd", person.LastName);
+            Assert.AreEqual("Pavankumar@gmail.com", person.Email);
+            Assert.AreEqual("938474837", person.PhNum);
+            Assert.AreEqual("KHM", person.Address);
+            Console.WriteLine(response.Content);
+        }
+        /// <summary>
+        /// Update the 
+        /// </summary>
+        [TestMethod]
+        public void UpdatePerson()
+        {
+            //arrange
+            RestRequest request = new RestRequest("/AddressBook/update/2", Method.Put);
+            JObject jobjectBody = new JObject();
+            jobjectBody.Add("Firstperson", "Raja");
+            jobjectBody.Add("LastName", "shdd");
+            jobjectBody.Add("Email", "Pavankumar@gmail.com");
+            jobjectBody.Add("PhNum", "938474837");
+            jobjectBody.Add("Address", "KHM");
+            request.AddHeader("Accept", "application/json");
+            request.AddParameter("application/json",jobjectBody,ParameterType.RequestBody);
+           // request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(jobjectBody);
             //act
             RestResponse response = client.ExecuteAsync(request).Result;
             //assert
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
             Person person = JsonConvert.DeserializeObject<Person>(response.Content);
-            //Assert.AreEqual(5,person.Id);
-            Assert.AreEqual("Pavan",person.Firstperson);
-            Assert.AreEqual("ijfjfhf",person.LastName);
-            Assert.AreEqual("Pavan@gmail.com",person.Email);
-            Assert.AreEqual("938474837",person.PhNum);
-            Assert.AreEqual("KHM",person.Address);
+            //Assert.AreEqual(1,person.Id);
+            Assert.AreEqual("Raja", person.Firstperson);
+            Assert.AreEqual("shdd", person.LastName);
+            Assert.AreEqual("Pavankumar@gmail.com", person.Email);
+            Assert.AreEqual("938474837", person.PhNum);
+            Assert.AreEqual("KHM", person.Address);
             Console.WriteLine(response.Content);
         }
     }
