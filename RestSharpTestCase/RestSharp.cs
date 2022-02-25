@@ -84,7 +84,7 @@ namespace RestSharpTestCase
                 RestRequest request = new RestRequest("/AddressBook/update/1", Method.Put);
                 request.AddHeader("Content-type", "application/json");
                 request.AddJsonBody(
-                new
+                new Person
                 {
 
                     FirstPerson = "Raja",
