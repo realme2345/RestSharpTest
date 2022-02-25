@@ -53,7 +53,7 @@ namespace RestSharpTestCase
             RestRequest request = new RestRequest("/AddressBook/create", Method.Post);
             request.AddHeader("Content-type", "application/json");
             request.AddJsonBody(
-            new
+            new Person
             {
 
                 FirstPerson = "pavan",
@@ -67,11 +67,11 @@ namespace RestSharpTestCase
             // assert
             Assert.AreEqual(response.StatusCode, HttpStatusCode.Created);
             Person dataResponse = JsonConvert.DeserializeObject<Person>(response.Content);
-            Assert.AreEqual("Kylie", dataResponse.Firstperson);
-            Assert.AreEqual("McMiller", dataResponse.LastName);
-            Assert.AreEqual("kylie@gmail.com", dataResponse.Email);
-            Assert.AreEqual("7548965265", dataResponse.PhNum);
-            Assert.AreEqual("Sidewalk 3/41", dataResponse.Address);
+           Assert.AreEqual("pavan", dataResponse.Firstperson);
+            Assert.AreEqual("guggill", dataResponse.LastName);
+            Assert.AreEqual("pavan@gmail.com", dataResponse.Email);
+            Assert.AreEqual("8347764435", dataResponse.PhNum);
+            Assert.AreEqual("KHM", dataResponse.Address);
         }
         /// <summary>
         /// Update the 
